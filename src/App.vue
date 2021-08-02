@@ -1,50 +1,47 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
+    <div class="main">
       <router-view />
-    </v-main>
+    </div>
   </v-app>
 </template>
 
 <script>
+/* eslint-disable */
 export default {
-  name: "App",
+  name: 'App',
 
   data: () => ({
     //
   }),
 };
 </script>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Oswald|Roboto|Kanit');
+* {
+  font-family: 'Montserrat', Oswald, Roboto, sans-serif;
+}
+
+.main {
+  display: flex;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(155, 180, 178, 1) 100%
+  );
+  height: 100%;
+  align-items: center;
+}
+.v-data-table-header-mobile {
+  display: none;
+}
+.v-data-table tbody tr:hover:not(.v-data-table__expanded__content) {
+  background: rgba(155, 180, 178, 0.3) !important;
+}
+.v-btn__content {
+  font-size: 0.7rem;
+  font-weight: normal;
+}
+</style>
