@@ -1,24 +1,29 @@
-# app
+# app frontend
 
-## Project setup
+```
+Aplicação simples de frontend usando VueJs. Nela é executado um CRUD de Contatos, utilizando o backend com NodeJs + MongoDb (https://github.com/guiialexandrino/contacts-backend)
+```
+
+### Project setup
+
 ```
 yarn install
 ```
 
 ### Compiles and hot-reloads for development
+
 ```
 yarn serve
 ```
 
 ### Compiles and minifies for production
+
 ```
 yarn build
 ```
 
 ### Lints and fixes files
+
 ```
 yarn lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
