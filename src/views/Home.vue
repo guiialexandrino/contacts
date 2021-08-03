@@ -35,7 +35,9 @@
         />
         <v-btn
           v-if="!editMode"
-          :disabled="!contact.name || contact.number.length != 13"
+          :disabled="
+            !contact.name || !contact.number || contact.number.length < 12
+          "
           elevation="0"
           rounded
           color="green lighten-1"
@@ -45,7 +47,9 @@
         >
         <v-btn
           v-if="editMode"
-          :disabled="!contact.name || contact.number.length != 13"
+          :disabled="
+            !contact.name || !contact.number || contact.number.length < 12
+          "
           elevation="0"
           rounded
           color="blue darken-1"
@@ -55,7 +59,6 @@
         >
         <v-btn
           v-if="editMode"
-          :disabled="!contact.name || contact.number.length != 13"
           elevation="0"
           rounded
           color="red lighten-1"
