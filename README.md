@@ -1,7 +1,9 @@
 # app frontend
 
 ```
-Aplicação simples de frontend usando VueJs. Nela é executado um CRUD de Contatos, utilizando o backend com NodeJs + MongoDb (https://github.com/guiialexandrino/contacts-backend)
+Aplicação simples de frontend usando VueJs.Nela é executado um CRUD de Contatos.
+Utilizando o backend com NodeJs + MongoDb:
+https://github.com/guiialexandrino/contacts-backend
 ```
 
 ### Project setup
