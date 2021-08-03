@@ -1,10 +1,16 @@
 <template>
   <v-row no-gutters>
-    <v-col cols="12" class="mb-4" align="center"><h1>Contatos</h1></v-col>
+    <v-col cols="12" class="mb-4 mt-5" align="center"><h1>Contatos</h1></v-col>
     <v-col cols="12" class="mb-4" align="center">
       <img class="logo" src="../../public/logo.png" />
     </v-col>
     <v-col cols="12" align="center">
+      <v-row v-if="editMode" no-gutters justify="center" class="my-4"
+        ><span
+          ><v-icon class="pb-1 pr-2">mdi-pencil</v-icon>Você está editando:
+          <b>{{ itemToEdit.name }} - {{ itemToEdit.number }}</b></span
+        >
+      </v-row>
       <v-row no-gutters justify="center">
         <v-text-field
           color="grey darken-3"
@@ -27,29 +33,66 @@
           solo
           dense
         />
-        <v-btn elevation="0" rounded color="grey darken-1" class="white--text"
+        <v-btn
+          v-if="!editMode"
+          :disabled="!contact.name || contact.number.length != 13"
+          elevation="0"
+          rounded
+          color="green lighten-1"
+          class="white--text"
+          @click="handleAdd"
           >Adicionar</v-btn
+        >
+        <v-btn
+          v-if="editMode"
+          :disabled="!contact.name || contact.number.length != 13"
+          elevation="0"
+          rounded
+          color="blue darken-1"
+          class="white--text mr-2 px-5"
+          @click="editContact(itemToEdit)"
+          >Editar</v-btn
+        >
+        <v-btn
+          v-if="editMode"
+          :disabled="!contact.name || contact.number.length != 13"
+          elevation="0"
+          rounded
+          color="red lighten-1"
+          class="white--text"
+          @click="cancel"
+          >Cancelar</v-btn
         >
       </v-row>
     </v-col>
-    <v-col cols="12" align="center">
+    <v-col v-if="contacts.length > 0" cols="12" align="center">
       <v-row no-gutters justify="center">
         <v-col cols="10" lg="7" xl="5">
           <v-data-table
-            class="mt-5 elevation-3"
+            class="mt-5 mb-12 elevation-3"
             :headers="headers"
             :items="contacts"
+            disable-pagination
             hide-default-footer
           >
             <template slot="item.actions" slot-scope="{ item }">
-              <v-icon small class="mr-2" @click="handleEdit(item)"
+              <v-icon
+                :disabled="editMode"
+                small
+                class="mr-2"
+                @click="handleEdit(item)"
                 >mdi-pencil</v-icon
               >
-              <v-icon small @click="handleDelete(item)">mdi-delete</v-icon>
+              <v-icon :disabled="editMode" small @click="handleDelete(item)"
+                >mdi-delete</v-icon
+              >
             </template>
           </v-data-table>
         </v-col>
       </v-row>
+    </v-col>
+    <v-col v-else align="center" class="my-12">
+      <h3>Ops.. parece que você ainda não tem nenhum contato :(</h3>
     </v-col>
     <!-- Loading -->
     <Loading v-if="loading" />
@@ -73,6 +116,8 @@ export default {
     ],
     contacts: [],
     loading: false,
+    editMode: false,
+    itemToEdit: {},
   }),
 
   async created() {
@@ -93,11 +138,70 @@ export default {
         $event.preventDefault();
       }
     },
-    handleEdit(item) {
-      console.log(item);
+    async handleAdd() {
+      try {
+        this.loading = true;
+        let data = this.contact;
+        let req = await Reqs.addContact(data);
+        if (req.success) {
+          this.contact.name = '';
+          this.contact.number = '';
+          this.init();
+        }
+      } catch (error) {
+      } finally {
+        this.loading = false;
+      }
     },
-    handleDelete(item) {
-      console.log(item);
+
+    handleEdit(item) {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+        this.editMode = true;
+        this.itemToEdit = item;
+        this.contact.name = item.name;
+        this.contact.number = item.number;
+      }, 250);
+    },
+
+    async editContact(item) {
+      try {
+        this.loading = true;
+        let data = {
+          id: item.id,
+          name: this.contact.name,
+          number: this.contact.number,
+        };
+        let req = await Reqs.editContact(data);
+      } catch (error) {
+      } finally {
+        this.loading = false;
+        this.editMode = false;
+        this.itemToEdit = {};
+        this.contact.name = '';
+        this.contact.number = '';
+        this.init();
+      }
+    },
+
+    cancel() {
+      this.editMode = false;
+      this.itemToEdit = {};
+      this.contact.name = '';
+      this.contact.number = '';
+    },
+
+    async handleDelete(item) {
+      try {
+        this.loading = true;
+        let req = await Reqs.deleteContact(item.id);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.loading = false;
+        this.init();
+      }
     },
 
     //integração backend
