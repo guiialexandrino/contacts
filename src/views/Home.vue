@@ -51,13 +51,19 @@
         </v-col>
       </v-row>
     </v-col>
+    <!-- Loading -->
+    <Loading v-if="loading" />
   </v-row>
 </template>
 
 <script>
 /* eslint-disable */
+import Reqs from '../utils/reqs';
+import Loading from '../components/Loading.vue';
+
 export default {
   name: 'Home',
+  components: { Loading },
   data: () => ({
     contact: { name: '', number: '' },
     headers: [
@@ -65,8 +71,14 @@ export default {
       { text: 'Telefone', value: 'number', align: 'center', sortable: false },
       { text: 'Ações', value: 'actions', align: 'center', sortable: false },
     ],
-    contacts: [{ name: 'Guilherme', number: '48988069645' }],
+    contacts: [],
+    loading: false,
   }),
+
+  async created() {
+    await this.init();
+  },
+
   methods: {
     validation($event) {
       if (this.contact.number.length == 0) {
@@ -86,6 +98,23 @@ export default {
     },
     handleDelete(item) {
       console.log(item);
+    },
+
+    //integração backend
+    async init() {
+      try {
+        this.loading = true;
+        let req = await Reqs.readAllContacts();
+        if (req.success) {
+          this.contacts = req.data;
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setTimeout(() => {
+          this.loading = false;
+        }, 300);
+      }
     },
   },
 };
